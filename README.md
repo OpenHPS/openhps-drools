@@ -3,23 +3,23 @@
   @openhps/core
 </h1>
 <p align="center">
-    <a href="https://github.com/OpenHPS/openhps-core/actions/workflows/main.yml" target="_blank">
-        <img alt="Build Status" src="https://github.com/OpenHPS/openhps-core/actions/workflows/main.yml/badge.svg">
+    <a href="https://github.com/OpenHPS/openhps-drools-kie/actions/workflows/main.yml" target="_blank">
+        <img alt="Build Status" src="https://github.com/OpenHPS/openhps-drools-kie/actions/workflows/main.yml/badge.svg">
     </a>
-    <a href="https://codecov.io/gh/OpenHPS/openhps-core">
-        <img src="https://codecov.io/gh/OpenHPS/openhps-core/branch/master/graph/badge.svg"/>
+    <a href="https://codecov.io/gh/OpenHPS/openhps-drools-kie">
+        <img src="https://codecov.io/gh/OpenHPS/openhps-drools-kie/branch/master/graph/badge.svg"/>
     </a>
-    <a href="https://codeclimate.com/github/OpenHPS/openhps-core/" target="_blank">
+    <a href="https://codeclimate.com/github/OpenHPS/openhps-drools-kie/" target="_blank">
         <img alt="Maintainability" src="https://img.shields.io/codeclimate/maintainability/OpenHPS/openhps-core">
     </a>
-    <a href="https://badge.fury.io/js/@openhps%2Fcore">
-        <img src="https://badge.fury.io/js/@openhps%2Fcore.svg" alt="npm version" height="18">
+    <a href="https://badge.fury.io/js/@openhps%2Fdrools-kie">
+        <img src="https://badge.fury.io/js/@openhps%2Fdrools-kie.svg" alt="npm version" height="18">
     </a>
-    <a href="https://app.fossa.com/projects/git%2Bgithub.com%2FOpenHPS%2Fopenhps-core?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2FOpenHPS%2Fopenhps-core.svg?type=shield"/></a>
+    <a href="https://app.fossa.com/projects/git%2Bgithub.com%2FOpenHPS%2Fopenhps-drools-kie?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2FOpenHPS%2Fopenhps-drools-kie.svg?type=shield"/></a>
 </p>
 
 <h3 align="center">
-    <a href="https://openhps.org/docs/getting-started">Getting Started</a> &mdash; <a href="https://openhps.org/docs/examples">Examples</a> &mdash; <a href="https://openhps.org/docs/core">API</a>
+    <a href="https://openhps.org/docs/getting-started">Getting Started</a> &mdash; <a href="https://openhps.org/docs/examples">Examples</a> &mdash; <a href="https://openhps.org/docs/drools-kie">API</a>
 </h3>
 
 <br />
