@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  kie-server:
+    build: docker/kie-server
+    expose:
+    - 8080/tcp
+  drools-wb:
+    build: docker/drools-wb
+    expose:
+    - 8080/tcp
+  proxy:
+    build: docker/proxy
+    restart: always
+    depends_on: 
+    - kie-server
+    - drools-wb
+    ports:
+    - 80:80
