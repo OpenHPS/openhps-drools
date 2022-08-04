@@ -3,6 +3,8 @@ version: '3'
 services:
   kie-server:
     build: docker/kie-server
+    depends_on: 
+    - drools-wb
     expose:
     - 8080/tcp
   drools-wb:

@@ -12,10 +12,10 @@ ENV KIE_SERVER_LOCATION http://localhost:8080/kie-server/services/rest/server
 ENV KIE_SERVER_USER kieserver
 ENV KIE_SERVER_PWD kieserver1!
 # When using this image against jboss/jbpm-workbench-showcase use /jbpm-console/rest/controller
-# ENV KIE_SERVER_CONTROLLER http://localhost:8080/kie-wb/rest/controller
+ENV KIE_SERVER_CONTROLLER http://drools-wb:8080/business-central/rest/controller
 ENV KIE_SERVER_CONTROLLER_USER admin
 ENV KIE_SERVER_CONTROLLER_PWD admin
-ENV KIE_MAVEN_REPO http://localhost:8080/kie-wb/maven2
+ENV KIE_MAVEN_REPO http://drools-wb:8080/business-central/maven2
 ENV KIE_MAVEN_REPO_USER admin
 ENV KIE_MAVEN_REPO_PASSWORD admin
 

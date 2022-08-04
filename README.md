@@ -34,6 +34,18 @@ If you have [npm installed](https://www.npmjs.com/get-npm), start using @openhps
 npm install @openhps/drools-kie --save
 ```
 
+## Usage
+
+```ts
+ModelBuilder.create()
+    .addService(new DroolsKIEService({
+        baseUrl: "http://localhost/kie-server",
+        username: "admin",
+        password: "admin"
+    }))
+    .build();
+```
+
 ## Contributors
 The framework is open source and is mainly developed by PhD Student Maxim Van de Wynckel as part of his research towards *Hybrid Positioning and Implicit Human-Computer Interaction* under the supervision of Prof. Dr. Beat Signer.
 
