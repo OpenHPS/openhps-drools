@@ -3,7 +3,7 @@ FROM jboss/wildfly:23.0.2.Final
 ####### ENVIRONMENT ############
 ENV JBOSS_BIND_ADDRESS 0.0.0.0
 ENV KIE_REPOSITORY https://repository.jboss.org/nexus/content/groups/public-jboss
-ENV KIE_VERSION 7.60.0.Final
+ENV KIE_VERSION 7.73.0.Final
 ENV KIE_CLASSIFIER wildfly23
 ENV KIE_CONTEXT_PATH business-central
 ENV JAVA_OPTS -Xms256m -Xmx2048m -Djava.net.preferIPv4Stack=true -Dfile.encoding=UTF-8
