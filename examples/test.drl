@@ -1,0 +1,10 @@
+package org.openhps.drools;
+import org.openhps.drools.*;
+
+rule "Test"
+    when
+        $position = DataObject( (Absolute2DPosition) position );
+        $position.x == 3 & $position.y == 3
+    then
+        System.out.println("Test");
+end

@@ -31,7 +31,7 @@ This repository contains the Drools KIE client component for OpenHPS. Drools is 
 ## Getting Started
 If you have [npm installed](https://www.npmjs.com/get-npm), start using @openhps/drools-kie with the following command.
 ```bash
-npm install @openhps/drools-kie --save
+npm install @openhps/drools --save
 ```
 
 ## Usage

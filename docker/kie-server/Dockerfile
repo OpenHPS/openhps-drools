@@ -7,8 +7,8 @@ ENV KIE_VERSION 7.73.0.Final
 ENV KIE_CLASSIFIER ee8
 ENV KIE_CONTEXT_PATH kie-server
 ENV JAVA_OPTS -Xms256m -Xmx1024m -Djava.net.preferIPv4Stack=true -Dfile.encoding=UTF-8
-# ENV KIE_SERVER_ID kie-server
-ENV KIE_SERVER_LOCATION http://localhost:8080/kie-server/services/rest/server
+ENV KIE_SERVER_ID kie-server
+ENV KIE_SERVER_LOCATION http://kie-server:8080/kie-server/services/rest/server
 ENV KIE_SERVER_USER kieserver
 ENV KIE_SERVER_PWD kieserver1!
 # When using this image against jboss/jbpm-workbench-showcase use /jbpm-console/rest/controller

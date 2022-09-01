@@ -1,1 +1,1 @@
-export * from './DroolsKIEService';
+export * from './DroolsService';
