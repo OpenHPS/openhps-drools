@@ -9,15 +9,40 @@ services:
     - 8080/tcp
   drools-wb:
     build: docker/drools-wb
+    depends_on:
+      - mariadb
     extra_hosts:
       host.docker.internal: host-gateway
     expose:
     - 8080/tcp
   proxy:
     build: docker/proxy
-    restart: always
     depends_on: 
     - kie-server
     - drools-wb
     ports:
     - 80:80
+  mariadb:
+    image: mariadb:10.3
+    ports:
+    - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: test123
+      MYSQL_INITDB_SKIP_TZINFO: "yes"
+    volumes:
+    - database:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    expose:
+    - 80:80
+    ports:
+    - 8080:80
+    depends_on:
+    - mariadb
+    environment:
+      PMA_HOST: mariadb
+      MYSQL_ROOT_PASSWORD: test123
+      UPLOAD_LIMIT: 3000000000
+volumes:
+    database:
+    

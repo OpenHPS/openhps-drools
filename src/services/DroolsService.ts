@@ -2,6 +2,7 @@ import { Service } from '@openhps/core';
 import axios, { AxiosRequestConfig } from 'axios';
 import { Git } from 'node-git-server';
 import * as path from 'path';
+import { Command } from '../commands/Command';
 
 /**
  * Drools KIE service is a service to connect to a Drools server.
@@ -116,16 +117,11 @@ export class DroolsService extends Service {
         });
     }
 
-    createProject(spaceName: string): Promise<Project> {
+    createProject(spaceName: string, project: Project): Promise<Project> {
         return new Promise((resolve, reject) => {
             const tmpDir = path.join(__dirname, '../../tmp');
             const reposDir = path.join(tmpDir, 'repos');
             const repos = new Git(reposDir);
-            const project: Project = {
-                name: 'OpenHPS',
-                groupId: 'org.openhps',
-                version: '1.0.0',
-            };
 
             repos.listen(
                 7000,
@@ -241,10 +237,11 @@ export class DroolsService extends Service {
                 .put(
                     this.CONTAINERS + container.id,
                     {
+                        'container-id': container.id,
                         'release-id': {
                             'artifact-id': container.artifactId,
                             'group-id': container.groupId,
-                            version: container.version,
+                            'version': container.version,
                         },
                     },
                     this.kieOptions,
@@ -291,6 +288,24 @@ export class DroolsService extends Service {
                     resolve(result.data);
                 })
                 .catch(reject);
+        });
+    }
+
+    /**
+     * Execute a Kie Session command
+     *
+     * @param {string} containerId Container ID to execute command on
+     * @param {Command[]} commands Command(s) to execute
+     * @returns 
+     */
+    executeCommand(containerId: string, ... commands: Command[]): Promise<void> {
+        return new Promise((resolve, reject) => {
+            axios.post(this.CONTAINERS + "instances/" + containerId, {
+                commands: commands.map(command => command.toJSON())
+            }).then((result) => {
+                resolve(result.data);
+            })
+            .catch(reject);
         });
     }
 

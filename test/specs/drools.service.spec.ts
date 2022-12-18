@@ -47,7 +47,11 @@ describe('DroolsService', () => {
         });
 
         it('should clone a project from git', (done) => {
-            service.createProject("Test1").then(() => {
+            service.createProject("Test1", {
+                name: 'OpenHPS',
+                groupId: 'org.openhps',
+                version: '1.0.0',
+            }).then(() => {
                 done();
             }).catch(done);
         });
@@ -77,7 +81,18 @@ describe('DroolsService', () => {
                 defaultGroupId: "org.openhps",
                 description: "This is a test"
             }).then(() => {
-                return service.createProject("Test2");
+                return service.createProject("Test2", {
+                    name: 'OpenHPS',
+                    groupId: 'org.openhps',
+                    version: '1.0.0',
+                });
+            }).then(() => {
+                return service.createContainer({
+                    artifactId: "OpenHPS-Drools",
+                    groupId: "org.openhps",
+                    id: "testcontainer",
+                    version: "1.0.0-SNAPSHOT"
+                });
             }).then(() => {
                 done();
             }).catch(done);

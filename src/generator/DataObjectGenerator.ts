@@ -6,7 +6,6 @@ import {
     SerializableMemberOptions,
     TypeDescriptor,
 } from '@openhps/core';
-import { Project } from '..';
 
 /**
  * Decision manager Data Object asset generator.
