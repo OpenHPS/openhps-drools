@@ -3,6 +3,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { Git } from 'node-git-server';
 import * as path from 'path';
 import { Command } from '../commands/Command';
+import { ProcessInstance } from '../processes/ProcessInstance';
 
 /**
  * Drools KIE service is a service to connect to a Drools server.
@@ -360,6 +361,30 @@ export class DroolsService extends Service {
                     }
                 })
                 .catch(reject);
+        });
+    }
+
+    findProcessInstances(containerId: string, processId: string): Promise<ProcessInstance[]> {
+        return new Promise((resolve, reject) => {
+            axios.get(
+                this.CONTAINERS + containerId + "/processes/" + processId,
+                this.kieOptions
+            ).then((result) => {
+
+            }).catch(reject);
+        });
+    }
+
+    startProcess(containerId: string, processId: string): Promise<ProcessInstance> {
+        return new Promise((resolve, reject) => {
+            axios.post(
+                this.CONTAINERS + containerId + "/processes/" + processId,
+                this.kieOptions
+            ).then((result) => {
+                resolve({
+
+                });
+            }).catch(reject);
         });
     }
 }

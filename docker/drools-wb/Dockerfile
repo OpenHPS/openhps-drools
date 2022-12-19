@@ -30,9 +30,6 @@ RUN chown jboss:jboss $JBOSS_HOME/standalone/configuration/standalone-full-drool
 chown jboss:jboss $JBOSS_HOME/standalone/configuration/drools-users.properties && \
 chown jboss:jboss $JBOSS_HOME/standalone/configuration/drools-roles.properties
 
-####### MySQL Driver #######
-RUN etc/install.sh
-
 ####### CUSTOM JBOSS USER ############
 # Switchback to jboss user
 USER jboss
