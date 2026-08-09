@@ -7,7 +7,7 @@ export abstract class Command {
 
     toJSON(): any {
         return {
-            [this.key]: {}
-        }
+            [this.key]: {},
+        };
     }
 }

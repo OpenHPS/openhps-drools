@@ -5,7 +5,7 @@ import '@openhps/geospatial';
 
 describe('ProjectGenerator', () => {
     describe('loadClasses()', () => {
-        it('should load all relevant objects', done => {
+        it('should load all relevant objects', (done) => {
             expect(ProjectGenerator.loadClasses().length).to.be.greaterThan(10);
             done();
         });
@@ -13,7 +13,7 @@ describe('ProjectGenerator', () => {
 
     describe('generateJavaClasses()', () => {
         it('should generate a java class array', (done) => {
-            ProjectGenerator.generateJavaClasses().then(classes => {
+            ProjectGenerator.generateJavaClasses().then((classes) => {
                 expect(classes.size).to.be.greaterThan(10);
                 done();
             });

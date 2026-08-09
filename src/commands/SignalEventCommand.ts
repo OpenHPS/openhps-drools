@@ -1,12 +1,12 @@
-import { Command } from "./Command";
+import { Command } from './Command';
 
 export class SignalEventCommand extends Command {
     private _eventType: string;
     private _processInstanceId: number;
-    private _data: Map<String, Object> = new Map();
-    
+    private _data: Map<string, object> = new Map();
+
     constructor() {
-        super("signal-event");
+        super('signal-event');
     }
 
     setProcessInstanceId(instance: number): this {
@@ -15,7 +15,7 @@ export class SignalEventCommand extends Command {
     }
 
     setEventType(type: string): this {
-        this._eventType = type;;
+        this._eventType = type;
         return this;
     }
 
@@ -23,8 +23,8 @@ export class SignalEventCommand extends Command {
         return {
             [this.key]: {
                 'process-instance-id': this._processInstanceId,
-                'event-type': this._eventType
-            }
-        }
+                'event-type': this._eventType,
+            },
+        };
     }
 }
