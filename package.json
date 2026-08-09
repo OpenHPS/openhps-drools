@@ -31,7 +31,6 @@
         "LICENSE"
     ],
     "scripts": {
-        "postinstall": "npm run generate",
         "test": "mocha --config test/.mocharc.json",
         "test:jenkins": "jenkins-mocha --cobertura --config test/.mocharc.json",
         "cover": "c8 mocha --config test/.mocharc.json",
