@@ -92,7 +92,7 @@ export class ProjectGenerator extends DataSerializer {
             ProjectGenerator.generateJavaClasses()
                 .then((classes) => {
                     classes.forEach((value, key) => {
-                        const packageDir = path.join(srcDir, ...value[0].split("."));
+                        const packageDir = path.join(srcDir, ...value[0].split('.'));
                         if (!fs.existsSync(packageDir)) {
                             fs.mkdirsSync(packageDir);
                         }

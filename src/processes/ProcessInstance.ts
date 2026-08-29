@@ -1,3 +1,1 @@
-export class ProcessInstance {
-
-}
+export class ProcessInstance {}

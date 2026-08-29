@@ -52,7 +52,6 @@ export class DroolsService extends Service {
 
     /**
      * Find all spaces
-     *
      * @returns {Promise<Space[]>} Promise of all spaces
      */
     findAllSpaces(): Promise<Space[]> {
@@ -71,8 +70,7 @@ export class DroolsService extends Service {
             axios
                 .get(this.SPACES + name, this.workbenchOptions)
                 .then((result) => {
-                    if (result.data.type === 'SUCCESS') {
-                    } else {
+                    if (result.data.type !== 'SUCCESS') {
                         reject(result.data.msg);
                     }
                 })
@@ -165,7 +163,6 @@ export class DroolsService extends Service {
 
     /**
      * Find all containers on the KIE server
-     *
      * @returns {Container[]} Array with containers
      */
     findAllContainers(): Promise<Container[]> {
@@ -186,7 +183,6 @@ export class DroolsService extends Service {
 
     /**
      * Find a container by ID
-     *
      * @param {string} id Container ID
      * @returns {Promise<Container>} Promise of a container if found
      */
@@ -207,7 +203,6 @@ export class DroolsService extends Service {
 
     /**
      * Delete a container by ID
-     *
      * @param {string} id Container ID
      * @returns {Promise<void>} Promise if the container is deleted
      */
@@ -228,7 +223,6 @@ export class DroolsService extends Service {
 
     /**
      * Create a new container
-     *
      * @param {Container} container Container to create
      * @returns {Promise<Container>} Promise of the saved container
      */
@@ -242,7 +236,7 @@ export class DroolsService extends Service {
                         'release-id': {
                             'artifact-id': container.artifactId,
                             'group-id': container.groupId,
-                            'version': container.version,
+                            version: container.version,
                         },
                     },
                     this.kieOptions,
@@ -260,7 +254,6 @@ export class DroolsService extends Service {
 
     /**
      * Find a job by id
-     *
      * @param {string} jobId Job identifier
      * @returns {Promise<Job>} Promise of a job
      */
@@ -277,7 +270,6 @@ export class DroolsService extends Service {
 
     /**
      * Delete a job
-     *
      * @param {string} jobId Job identifier
      * @returns {Promise<Job>} Job result
      */
@@ -294,38 +286,33 @@ export class DroolsService extends Service {
 
     /**
      * Execute a Kie Session command
-     *
      * @param {string} containerId Container ID to execute command on
      * @param {Command[]} commands Command(s) to execute
-     * @returns 
+     * @returns
      */
-    executeCommand(containerId: string, ... commands: Command[]): Promise<void> {
+    executeCommand(containerId: string, ...commands: Command[]): Promise<void> {
         return new Promise((resolve, reject) => {
-            axios.post(this.CONTAINERS + "instances/" + containerId, {
-                commands: commands.map(command => command.toJSON())
-            }).then((result) => {
-                resolve(result.data);
-            })
-            .catch(reject);
+            axios
+                .post(this.CONTAINERS + 'instances/' + containerId, {
+                    commands: commands.map((command) => command.toJSON()),
+                })
+                .then((result) => {
+                    resolve(result.data);
+                })
+                .catch(reject);
         });
     }
 
     /**
      * Wait for a job to finish or fail
-     *
      * @param {string} jobId Job identifier
      * @returns
      */
     protected awaitJob(jobId: string): Promise<string> {
         return new Promise((resolve, reject) => {
-            const service = this;
-            /**
-             *
-             */
-            function checkStatus() {
+            const checkStatus = () => {
                 setTimeout(() => {
-                    service
-                        .findJob(jobId)
+                    this.findJob(jobId)
                         .then((job) => {
                             switch (job.status) {
                                 case 'SUCCESS':
@@ -339,14 +326,13 @@ export class DroolsService extends Service {
                         })
                         .catch(reject);
                 }, 1000);
-            }
+            };
             checkStatus();
         });
     }
 
     /**
      * Get server information from the Drools KIE server
-     *
      * @returns {ServerInfo} Server information
      */
     info(): Promise<ServerInfo> {
@@ -366,25 +352,21 @@ export class DroolsService extends Service {
 
     findProcessInstances(containerId: string, processId: string): Promise<ProcessInstance[]> {
         return new Promise((resolve, reject) => {
-            axios.get(
-                this.CONTAINERS + containerId + "/processes/" + processId,
-                this.kieOptions
-            ).then((result) => {
-
-            }).catch(reject);
+            axios
+                .get(this.CONTAINERS + containerId + '/processes/' + processId, this.kieOptions)
+                .then((result) => {})
+                .catch(reject);
         });
     }
 
     startProcess(containerId: string, processId: string): Promise<ProcessInstance> {
         return new Promise((resolve, reject) => {
-            axios.post(
-                this.CONTAINERS + containerId + "/processes/" + processId,
-                this.kieOptions
-            ).then((result) => {
-                resolve({
-
-                });
-            }).catch(reject);
+            axios
+                .post(this.CONTAINERS + containerId + '/processes/' + processId, this.kieOptions)
+                .then((result) => {
+                    resolve({});
+                })
+                .catch(reject);
         });
     }
 }
