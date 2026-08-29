@@ -22,19 +22,23 @@ export class ProjectGenerator extends DataSerializer {
     }
 
     static loadModules(objects: Array<Serializable<any>>, module: NodeModule = require.main) {
-        if (module === undefined) {
+        if (module === undefined || module === null) {
             // Use cache instead
             Object.values(require.cache).map((m) => this.loadModules(objects, m));
             return;
         }
         this._modules.add(module.id);
-        Object.keys(module.exports).forEach((key) => {
+        // Walking require.cache reaches entries that have no exports object -- a module
+        // still being evaluated, or one the coverage instrumentation registered. That
+        // made Object.keys() throw "Cannot convert undefined or null to object", so the
+        // suite passed under `npm test` and failed under `npm run cover:ci`.
+        Object.keys(module.exports ?? {}).forEach((key) => {
             const childModule = module.exports[key];
             if (objects.includes(childModule)) {
                 childModule.prototype._module = this.findModule(path.dirname(require.resolve(module.id)));
             }
         });
-        module.children.forEach((module) => {
+        (module.children ?? []).forEach((module) => {
             if (!this._modules.has(module.id)) {
                 this.loadModules(objects, module);
             }
