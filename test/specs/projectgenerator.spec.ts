@@ -20,6 +20,23 @@ describe('ProjectGenerator', () => {
         });
     });
 
+    describe('loadModules()', () => {
+        // Regression test: require.cache holds entries with no exports object -- one
+        // mid-evaluation, or registered by the coverage instrumentation -- and walking
+        // them threw "Cannot convert undefined or null to object".
+        it('should skip cache entries that have no exports', () => {
+            expect(() =>
+                ProjectGenerator.loadModules([], { id: 'no-exports', exports: undefined } as any),
+            ).to.not.throw();
+        });
+
+        it('should skip cache entries that have no children', () => {
+            expect(() =>
+                ProjectGenerator.loadModules([], { id: 'no-children', exports: {}, children: undefined } as any),
+            ).to.not.throw();
+        });
+    });
+
     describe('buildProject()', () => {
         it('should generate a git project', (done) => {
             // Without the catch a rejection never called done(), so a real failure was
