@@ -15,6 +15,13 @@ export class DroolsService extends Service {
     readonly JOBS = '/rest/jobs/';
     protected options: DroolsOptions;
 
+    /**
+     * Default per-request timeout. Without one axios waits forever, so a request to a
+     * KIE server that never answers keeps its socket -- and the Node event loop -- open
+     * long after the caller has given up on it.
+     */
+    static readonly DEFAULT_TIMEOUT = 30000;
+
     constructor(options?: DroolsOptions) {
         super();
         this.options = options;
@@ -22,6 +29,7 @@ export class DroolsService extends Service {
 
     protected get kieOptions(): AxiosRequestConfig {
         return {
+            timeout: this.options.timeout ?? DroolsService.DEFAULT_TIMEOUT,
             baseURL: this.options.kie.baseUrl,
             auth: {
                 username: this.options.kie.username,
@@ -37,6 +45,7 @@ export class DroolsService extends Service {
 
     protected get workbenchOptions(): AxiosRequestConfig {
         return {
+            timeout: this.options.timeout ?? DroolsService.DEFAULT_TIMEOUT,
             baseURL: this.options.workbench.baseUrl,
             auth: {
                 username: this.options.workbench.username,
@@ -410,6 +419,11 @@ export interface Container {
 }
 
 export interface DroolsOptions {
+    /**
+     * Per-request timeout in milliseconds. Defaults to
+     * {@link DroolsService.DEFAULT_TIMEOUT}.
+     */
+    timeout?: number;
     kie: {
         baseUrl: string;
         username: string;

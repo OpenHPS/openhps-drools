@@ -9,6 +9,9 @@ describe('DroolsService', () => {
             username: 'admin',
             password: 'admin',
         },
+        // Keep the reachability probe short: CI has no KIE server, and an
+        // unanswered request must not outlive the check that abandoned it.
+        timeout: 2000,
         workbench: {
             baseUrl: 'http://localhost/business-central',
             username: 'admin',
@@ -24,13 +27,19 @@ describe('DroolsService', () => {
     before(async function () {
         // findAllSpaces() hangs rather than rejecting when nothing is listening, so
         // the reachability check needs its own deadline.
+        let timer: NodeJS.Timeout;
         const reachable = await Promise.race([
             service
                 .findAllSpaces()
                 .then((spaces) => spaces)
                 .catch(() => undefined),
-            new Promise<undefined>((resolve) => setTimeout(() => resolve(undefined), 2000)),
+            new Promise<undefined>((resolve) => {
+                // unref'd so this timer alone cannot hold the process open.
+                timer = setTimeout(() => resolve(undefined), 2000);
+                timer.unref();
+            }),
         ]);
+        clearTimeout(timer);
         if (reachable === undefined) {
             this.skip();
         }
