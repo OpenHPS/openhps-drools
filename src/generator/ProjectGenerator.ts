@@ -114,25 +114,29 @@ export class ProjectGenerator extends DataSerializer {
                             type: 'http',
                         },
                         () => {
+                            // The server must be closed on every path. Rejecting without
+                            // closing left port 7000 listening, which kept the Node event
+                            // loop alive: the CI job sat for the full 60 minute cap after
+                            // mocha had already reported and uploaded its results.
+                            const finish = (err?: Error) => {
+                                repos
+                                    .close()
+                                    .then(() => (err ? reject(err) : resolve()))
+                                    .catch(() => (err ? reject(err) : resolve()));
+                            };
                             exec(
+                                // Identity is passed per-command: a CI runner has no
+                                // global user.name/user.email, so `git commit` failed
+                                // there and took the whole suite down with it.
                                 'git init && ' +
                                     'git add . && ' +
-                                    'git commit -m "Initial commit" && ' +
+                                    'git -c user.name="OpenHPS CI" -c user.email="ci@openhps.org" ' +
+                                    'commit -m "Initial commit" && ' +
                                     'git push http://localhost:7000/project master',
                                 {
                                     cwd: projectDir,
                                 },
-                                (err) => {
-                                    if (err) {
-                                        return reject(err);
-                                    }
-                                    repos
-                                        .close()
-                                        .then(() => {
-                                            resolve();
-                                        })
-                                        .catch(reject);
-                                },
+                                (err) => finish(err ?? undefined),
                             );
                         },
                     );

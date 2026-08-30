@@ -22,9 +22,11 @@ describe('ProjectGenerator', () => {
 
     describe('buildProject()', () => {
         it('should generate a git project', (done) => {
-            ProjectGenerator.buildProject().then(() => {
-                done();
-            });
+            // Without the catch a rejection never called done(), so a real failure was
+            // reported as a bare 20s timeout naming the file rather than the cause.
+            ProjectGenerator.buildProject()
+                .then(() => done())
+                .catch(done);
         });
     });
 });
