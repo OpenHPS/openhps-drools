@@ -77,7 +77,7 @@
         "@openhps/geospatial": "^0.1.33",
         "@openhps/rf": "^1.0.4",
         "@types/chai": "^5.2.2",
-        "@types/fs-extra": "^9.0.13",
+        "@types/fs-extra": "^11.0.4",
         "@types/mocha": "^10.0.10",
         "@types/node": "^24.3.0",
         "c8": "^12.0.0",
