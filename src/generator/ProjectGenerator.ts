@@ -9,7 +9,7 @@ import { Git } from 'node-git-server';
 export class ProjectGenerator extends DataSerializer {
     private static _modules: Set<string> = new Set();
 
-    static findModule(dir: string): string {
+    static findModule(dir: string): string | undefined {
         const packageFile = path.join(dir, 'package.json');
         if (fs.existsSync(packageFile)) {
             const packageJson = JSON.parse(fs.readFileSync(packageFile, { encoding: 'utf-8' }));
@@ -17,6 +17,11 @@ export class ProjectGenerator extends DataSerializer {
         } else {
             const completeDir = dir.split(path.sep);
             completeDir.pop();
+            // Stop at the filesystem root: without this, a path with no package.json
+            // above it recurses on the empty string forever.
+            if (completeDir.length === 0) {
+                return undefined;
+            }
             return this.findModule(completeDir.join(path.sep));
         }
     }
@@ -49,8 +54,10 @@ export class ProjectGenerator extends DataSerializer {
         const declarations: Array<ObjectMetadata> = [];
         this.knownTypes.forEach((value) => {
             const metadata = DataSerializerUtils.getOwnMetadata(value);
-            const metadataClone = { ...metadata };
             if (metadata) {
+                // Clone the dataMembers map as well: a shallow copy would keep the
+                // serializer's live map, and the deletes below would mutate it.
+                const metadataClone = { ...metadata, dataMembers: new Map(metadata.dataMembers) };
                 const superConstructor = Object.getPrototypeOf(metadata.classType);
                 const superMetadata = DataSerializerUtils.getRootMetadata(superConstructor);
                 if (superMetadata) {

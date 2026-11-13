@@ -22,34 +22,33 @@ export class DroolsService extends Service {
      */
     static readonly DEFAULT_TIMEOUT = 30000;
 
+    /**
+     * Upper bound for {@link awaitJob}. Without one, a job that never reaches a
+     * terminal state is polled forever, and its pending timers keep the Node event
+     * loop alive.
+     */
+    static readonly DEFAULT_JOB_TIMEOUT = 300000;
+
     constructor(options?: DroolsOptions) {
         super();
         this.options = options;
     }
 
     protected get kieOptions(): AxiosRequestConfig {
-        return {
-            timeout: this.options.timeout ?? DroolsService.DEFAULT_TIMEOUT,
-            baseURL: this.options.kie.baseUrl,
-            auth: {
-                username: this.options.kie.username,
-                password: this.options.kie.password,
-            },
-            headers: {
-                'Content-Type': 'application/json',
-                'X-KIE-ContentType': 'JSON',
-                Accept: 'application/json',
-            },
-        };
+        return this.endpointOptions(this.options.kie);
     }
 
     protected get workbenchOptions(): AxiosRequestConfig {
+        return this.endpointOptions(this.options.workbench);
+    }
+
+    private endpointOptions(endpoint: { baseUrl: string; username: string; password: string }): AxiosRequestConfig {
         return {
             timeout: this.options.timeout ?? DroolsService.DEFAULT_TIMEOUT,
-            baseURL: this.options.workbench.baseUrl,
+            baseURL: endpoint.baseUrl,
             auth: {
-                username: this.options.workbench.username,
-                password: this.options.workbench.password,
+                username: endpoint.username,
+                password: endpoint.password,
             },
             headers: {
                 'Content-Type': 'application/json',
@@ -81,6 +80,8 @@ export class DroolsService extends Service {
                 .then((result) => {
                     if (result.data.type !== 'SUCCESS') {
                         reject(result.data.msg);
+                    } else {
+                        resolve(result.data);
                     }
                 })
                 .catch(reject);
@@ -180,7 +181,6 @@ export class DroolsService extends Service {
                 .get(this.CONTAINERS, this.kieOptions)
                 .then((result) => {
                     if (result.data.type === 'SUCCESS') {
-                        console.log(result.data.result['kie-containers']);
                         resolve(result.data.result['kie-containers']);
                     } else {
                         reject(result.data.msg);
@@ -302,9 +302,13 @@ export class DroolsService extends Service {
     executeCommand(containerId: string, ...commands: Command[]): Promise<void> {
         return new Promise((resolve, reject) => {
             axios
-                .post(this.CONTAINERS + 'instances/' + containerId, {
-                    commands: commands.map((command) => command.toJSON()),
-                })
+                .post(
+                    this.CONTAINERS + 'instances/' + containerId,
+                    {
+                        commands: commands.map((command) => command.toJSON()),
+                    },
+                    this.kieOptions,
+                )
                 .then((result) => {
                     resolve(result.data);
                 })
@@ -319,8 +323,18 @@ export class DroolsService extends Service {
      */
     protected awaitJob(jobId: string): Promise<string> {
         return new Promise((resolve, reject) => {
+            const startedAt = Date.now();
             const checkStatus = () => {
                 setTimeout(() => {
+                    // A job that never reaches a terminal state must not be polled
+                    // forever: that timer would keep the Node event loop alive.
+                    if (Date.now() - startedAt >= DroolsService.DEFAULT_JOB_TIMEOUT) {
+                        return reject(
+                            new Error(
+                                `Job ${jobId} did not reach a terminal state within ${DroolsService.DEFAULT_JOB_TIMEOUT}ms`,
+                            ),
+                        );
+                    }
                     this.findJob(jobId)
                         .then((job) => {
                             switch (job.status) {
@@ -363,7 +377,13 @@ export class DroolsService extends Service {
         return new Promise((resolve, reject) => {
             axios
                 .get(this.CONTAINERS + containerId + '/processes/' + processId, this.kieOptions)
-                .then((result) => {})
+                .then((result) => {
+                    if (result.data.type === 'SUCCESS') {
+                        resolve(result.data.result?.['kie-server-processes']?.['kie-server-process'] ?? []);
+                    } else {
+                        reject(result.data.msg);
+                    }
+                })
                 .catch(reject);
         });
     }
@@ -371,7 +391,7 @@ export class DroolsService extends Service {
     startProcess(containerId: string, processId: string): Promise<ProcessInstance> {
         return new Promise((resolve, reject) => {
             axios
-                .post(this.CONTAINERS + containerId + '/processes/' + processId, this.kieOptions)
+                .post(this.CONTAINERS + containerId + '/processes/' + processId, {}, this.kieOptions)
                 .then((result) => {
                     resolve({});
                 })
